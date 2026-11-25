@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<!-- Created by Sandeep. Copyright 2026 Sandeep. All rights reserved. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="author" content="Sandeep">
+<meta name="copyright" content="Sandeep">
+<meta name="theme-color" content="#EDF3F8">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Tic-tac-toe">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tic-Tac-Toe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF3F8; --grid:#A9C2D9; --ink:#2B2F36; --pen:#C9402B; --win:#FFF0A8; --soft:#5D6B7A;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#14202B; --grid:#2F4659; --ink:#E8ECEF; --pen:#FF8A6B; --win:#3B3A1E; --soft:#93A4B5; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#14202B; --grid:#2F4659; --ink:#E8ECEF; --pen:#FF8A6B; --win:#3B3A1E; --soft:#93A4B5; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{
+  margin:0; min-height:100vh; background-color:var(--paper); color:var(--ink);
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:28px 28px; background-position:-1px -1px;
+  font-family:"Caveat","Segoe Print","Bradley Hand",cursive;
+  display:flex; flex-direction:column; align-items:center;
+}
+[hidden]{display:none !important}
+.screen{width:100%; max-width:420px; flex:1; padding:28px 20px 12px; display:flex; flex-direction:column; align-items:center; gap:18px}
+.center{justify-content:center}
+h1{margin:0; font-size:3rem; line-height:1; font-weight:700; text-align:center}
+h2{margin:0; font-size:2.4rem; line-height:1}
+p{margin:0}
+
+/* splash */
+#splash{cursor:pointer; gap:14px}
+.icon{width:150px; height:150px; border-radius:32px; background:var(--paper); border:4px solid var(--ink); padding:14px}
+.icon svg{width:100%; height:100%; overflow:visible}
+.ig{stroke:var(--ink); stroke-width:6; stroke-linecap:round; fill:none}
+.ix{stroke:var(--ink); stroke-width:8; stroke-linecap:round; fill:none; stroke-dasharray:1}
+.io{stroke:var(--pen); stroke-width:8; stroke-linecap:round; fill:none; stroke-dasharray:1}
+.d1{animation:draw .5s .15s ease-out both}
+.d2{animation:draw .5s .55s ease-out both}
+.hint{font-size:1.5rem; color:var(--soft)}
+#splash h1{font-size:3.6rem}
+
+/* buttons */
+.btn{
+  font:inherit; font-size:1.9rem; width:100%; max-width:280px; padding:4px 20px; cursor:pointer;
+  background:var(--paper); color:var(--ink); border:3px solid var(--ink); border-radius:999px;
+}
+.btn.main{background:var(--ink); color:var(--paper)}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+.btn:focus-visible,.cell:focus-visible,.seg button:focus-visible{outline:3px solid var(--pen); outline-offset:2px}
+.menu{display:flex; flex-direction:column; align-items:center; gap:12px; width:100%}
+.seg{display:flex; gap:8px}
+.seg button{font:inherit; font-size:1.4rem; padding:2px 16px; background:var(--paper); color:var(--ink); border:2px solid var(--ink); border-radius:999px; cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--ink); color:var(--paper)}
+
+/* help */
+.help{max-width:340px; font-family:"Patrick Hand","Segoe Print","Bradley Hand",cursive; font-size:1.3rem; line-height:1.4; display:flex; flex-direction:column; gap:10px; background:var(--paper); padding:14px 18px; border:2px solid var(--ink); border-radius:12px}
+
+/* game */
+#status{font-size:1.8rem; min-height:2.2rem; text-align:center}
+.board{width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); background:var(--paper); border-radius:6px; padding:6px}
+.cell{
+  font:inherit; background:transparent; border:0; cursor:pointer; padding:10%;
+  border-right:4px solid var(--ink); border-bottom:4px solid var(--ink);
+  display:flex; align-items:center; justify-content:center; border-radius:0;
+}
+.cell:nth-child(3n){border-right:0}
+.cell:nth-child(n+7){border-bottom:0}
+.cell.win{background:var(--win)}
+.cell svg{width:100%; height:100%; overflow:visible}
+.mark{fill:none; stroke-width:9; stroke-linecap:round; stroke-dasharray:1}
+.x{stroke:var(--ink)} .o{stroke:var(--pen)}
+.draw{animation:draw .28s ease-out both}
+@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+.score{display:flex; gap:28px; font-size:1.7rem}
+.score b{font-size:2rem; margin-left:4px}
+.so{color:var(--pen)}
+.row{display:flex; gap:10px; width:100%; justify-content:center}
+.row .btn{font-size:1.6rem; max-width:160px}
+.modal{position:fixed; inset:0; background:rgba(0,0,0,.5); display:flex; align-items:center; justify-content:center; padding:20px; z-index:10}
+.card{background:var(--paper); border:3px solid var(--ink); border-radius:18px; padding:26px 24px; width:100%; max-width:300px; display:flex; flex-direction:column; align-items:center; gap:18px; text-align:center}
+.card h2{font-size:2.8rem}
+@media (prefers-reduced-motion:reduce){.draw,.d1,.d2{animation:none}}
+</style>
+</head>
+<body>
+
+<section id="splash" class="screen center" aria-label="Tic-tac-toe">
+  <div class="icon">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <path class="ig" d="M38 8 V92 M64 8 V92 M8 36 H92 M8 64 H92"/>
+      <path class="ix d1" pathLength="1" d="M12 12 L30 28 M30 12 L12 28"/>
+      <path class="io d2" pathLength="1" d="M51 50 C57 46 60 52 56 56 C52 60 46 56 51 50"/>
+    </svg>
+  </div>
+  <h1>Tic-tac-toe</h1>
+  <p class="hint">Tap to start</p>
+</section>
+
+<section id="menu" class="screen center" hidden>
+  <h1>Tic-tac-toe</h1>
+  <div class="seg" role="group" aria-label="Game mode">
+    <button type="button" data-mode="friend" aria-pressed="true">2 players</button>
+    <button type="button" data-mode="cpu" aria-pressed="false">Vs computer</button>
+  </div>
+  <div class="menu">
+    <button type="button" class="btn main" id="bNew">New game</button>
+    <button type="button" class="btn" id="bCont">Continue game</button>
+    <button type="button" class="btn" id="bHelp">Help</button>
+    <button type="button" class="btn" id="bQuit">Quit</button>
+  </div>
+</section>
+
+<section id="help" class="screen" hidden>
+  <h2>How to play</h2>
+  <div class="help">
+    <p>Take turns placing your mark. X goes first.</p>
+    <p>Get three in a row across, down or diagonally to win the round.</p>
+    <p>If all nine squares fill up with no line, it’s a draw.</p>
+    <p>Against the computer you play X. It never misses a trick, so a draw is a good result.</p>
+  </div>
+  <button type="button" class="btn main" id="bHelpBack">Back</button>
+</section>
+
+<section id="game" class="screen center" hidden>
+  <p id="status" aria-live="polite"></p>
+  <div class="board" id="board"></div>
+  <div class="score">
+    <span>X<b id="sx">0</b></span>
+    <span>Draws<b id="sd">0</b></span>
+    <span class="so">O<b id="so">0</b></span>
+  </div>
+</section>
+
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="card">
+    <h2 id="mTitle"></h2>
+    <button type="button" class="btn main" id="bPlay">Play again</button>
+  </div>
+</div>
+
+<section id="bye" class="screen center" hidden>
+  <h2>Thanks for playing</h2>
+  <p class="hint">You can close this tab now.</p>
+  <button type="button" class="btn main" id="bAgain">Play again</button>
+</section>
+
+
+<script>
+(function(){
+  var LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  var KEY="sandeep-tictactoe-save";
+  var board,turn,over,mode="friend",busy=false,score={X:0,O:0,D:0},started=false,cpuTimer=null;
+  var $=function(id){return document.getElementById(id)};
+  var screens=["splash","menu","help","game","bye"];
+  var cells=[],boardEl=$("board"),statusEl=$("status");
+
+  var X_SVG='<svg viewBox="0 0 100 100" aria-hidden="true"><path class="mark x draw" pathLength="1" d="M18 20 L82 80 M80 18 L20 82"/></svg>';
+  var O_SVG='<svg viewBox="0 0 100 100" aria-hidden="true"><path class="mark o draw" pathLength="1" d="M50 14 C76 12 90 34 86 56 C82 80 56 90 36 82 C14 72 10 40 30 24 C38 17 48 15 56 16"/></svg>';
+
+  function show(id){
+    screens.forEach(function(s){$(s).hidden=(s!==id)});
+    window.scrollTo(0,0);
+    if(id==="menu")refreshMenu();
+  }
+
+  /* saving */
+  function save(){
+    try{localStorage.setItem(KEY,JSON.stringify({board:board,turn:turn,over:over,mode:mode,score:score,started:started}))}catch(e){}
+  }
+  function load(){
+    try{
+      var s=JSON.parse(localStorage.getItem(KEY)||"null");
+      if(s&&Array.isArray(s.board)&&s.board.length===9){
+        board=s.board;turn=s.turn;over=!!s.over;mode=s.mode==="cpu"?"cpu":"friend";
+        score=s.score||score;started=!!s.started;return true;
+      }
+    }catch(e){}
+    return false;
+  }
+  function canContinue(){return !!board&&started&&!over}
+
+  function refreshMenu(){
+    $("bCont").disabled=!canContinue();
+    document.querySelectorAll(".seg button").forEach(function(b){
+      b.setAttribute("aria-pressed",b.dataset.mode===mode?"true":"false");
+    });
+  }
+
+  /* board */
+  for(var i=0;i<9;i++){
+    var b=document.createElement("button");
+    b.type="button";b.className="cell";
+    (function(idx){b.addEventListener("click",function(){play(idx)})})(i);
+    boardEl.appendChild(b);cells.push(b);
+  }
+
+  function winner(bd){
+    for(var k=0;k<LINES.length;k++){
+      var l=LINES[k];
+      if(bd[l[0]]&&bd[l[0]]===bd[l[1]]&&bd[l[1]]===bd[l[2]])return{p:bd[l[0]],line:l};
+    }
+    return null;
+  }
+  function full(bd){return bd.every(Boolean)}
+
+  function minimax(bd,p){
+    var w=winner(bd);
+    if(w)return w.p==="O"?{s:10}:{s:-10};
+    if(full(bd))return{s:0};
+    var best=null;
+    for(var i=0;i<9;i++){
+      if(bd[i])continue;
+      bd[i]=p;var r=minimax(bd,p==="O"?"X":"O");bd[i]=null;
+      if(best===null||(p==="O"&&r.s>best.s)||(p==="X"&&r.s<best.s))best={s:r.s,m:i};
+    }
+    return best;
+  }
+
+  function msg(){
+    if(over)return;
+    setStatus(mode==="cpu"&&turn==="O"?"Computer is thinking…":turn+"’s turn");
+  }
+  function setStatus(t){statusEl.textContent=t}
+
+  function renderBoard(){
+    var w=winner(board);
+    cells.forEach(function(c,i){
+      c.innerHTML=board[i]==="X"?X_SVG:board[i]==="O"?O_SVG:"";
+      c.classList.toggle("win",!!(w&&w.line.indexOf(i)>-1));
+      c.setAttribute("aria-label","Square "+(i+1)+", "+(board[i]||"empty"));
+    });
+    $("sx").textContent=score.X;$("so").textContent=score.O;$("sd").textContent=score.D;
+    if(over){
+      setStatus(w?w.p+" wins this round":"It’s a draw");
+    }else msg();
+  }
+
+  function place(i){
+    board[i]=turn;started=true;
+    cells[i].innerHTML=turn==="X"?X_SVG:O_SVG;
+    cells[i].setAttribute("aria-label","Square "+(i+1)+", "+turn);
+    var w=winner(board);
+    if(w){over=true;score[w.p]++;}
+    else if(full(board)){over=true;score.D++;}
+    else turn=turn==="X"?"O":"X";
+    renderBoardLight();
+    save();
+    if(over)setTimeout(showModal,700);
+  }
+  function showModal(){
+    var w=winner(board);
+    $("mTitle").textContent=w?w.p+" wins!":"It’s a draw";
+    $("modal").hidden=false;
+    $("bPlay").focus();
+  }
+  function renderBoardLight(){
+    var w=winner(board);
+    cells.forEach(function(c,i){c.classList.toggle("win",!!(w&&w.line.indexOf(i)>-1))});
+    $("sx").textContent=score.X;$("so").textContent=score.O;$("sd").textContent=score.D;
+    if(over)setStatus(w?w.p+" wins this round":"It’s a draw");else msg();
+  }
+
+  function maybeCpu(){
+    if(over||mode!=="cpu"||turn!=="O"||busy)return;
+    busy=true;
+    cpuTimer=setTimeout(function(){
+      busy=false;cpuTimer=null;
+      if(over)return;
+      var r=minimax(board.slice(),"O");
+      if(r&&r.m!=null)place(r.m);
+    },450);
+  }
+
+  function play(i){
+    if(over||busy||board[i])return;
+    if(mode==="cpu"&&turn==="O")return;
+    place(i);
+    maybeCpu();
+  }
+
+  function resetBoard(){
+    board=Array(9).fill(null);turn="X";over=false;started=false;busy=false;
+    if(cpuTimer){clearTimeout(cpuTimer);cpuTimer=null}
+  }
+
+  /* navigation */
+  $("splash").addEventListener("click",goMenu);
+  $("splash").addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" ")goMenu()});
+  $("splash").tabIndex=0;
+  var splashTimer=setTimeout(goMenu,2600);
+  function goMenu(){clearTimeout(splashTimer);if(!$("splash").hidden)show("menu")}
+
+  document.querySelectorAll(".seg button").forEach(function(btn){
+    btn.addEventListener("click",function(){
+      mode=btn.dataset.mode;refreshMenu();
+    });
+  });
+
+  $("bNew").addEventListener("click",function(){
+    score={X:0,O:0,D:0};resetBoard();renderBoard();save();show("game");
+  });
+  $("bCont").addEventListener("click",function(){
+    renderBoard();show("game");maybeCpu();
+  });
+  $("bHelp").addEventListener("click",function(){show("help")});
+  $("bHelpBack").addEventListener("click",function(){show("menu")});
+  $("bQuit").addEventListener("click",function(){show("bye");try{window.close()}catch(e){}});
+  $("bAgain").addEventListener("click",function(){show("menu")});
+  $("bPlay").addEventListener("click",function(){
+    $("modal").hidden=true;resetBoard();renderBoard();save();
+  });
+
+  if(!load())resetBoard();
+  show("splash");
+})();
+</script>
+<script>
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
+</script>
+</body>
+</html>
