@@ -31,9 +31,9 @@
   --paper:#14202B; --grid:#2F4659; --ink:#E8ECEF; --pen:#FF8A6B; --win:#3B3A1E; --soft:#93A4B5; color-scheme:dark;
 }
 *{box-sizing:border-box}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px); overscroll-behavior:none}
 body{
-  margin:0; min-height:100vh; background-color:var(--paper); color:var(--ink);
+  margin:0; min-height:100vh; min-height:100dvh; overscroll-behavior:none; touch-action:manipulation; -webkit-tap-highlight-color:transparent; -webkit-user-select:none; user-select:none; background-color:var(--paper); color:var(--ink);
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
   background-size:28px 28px; background-position:-1px -1px;
   font-family:"Caveat","Segoe Print","Bradley Hand",cursive;
