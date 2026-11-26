@@ -76,16 +76,16 @@ p{margin:0}
 
 /* game */
 #status{font-size:1.8rem; min-height:2.2rem; text-align:center}
-.board{width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr); background:var(--paper); border-radius:6px; padding:6px}
+.board{width:100%; aspect-ratio:1; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); grid-template-rows:repeat(3,minmax(0,1fr)); background:var(--paper); border-radius:6px; padding:6px}
 .cell{
-  font:inherit; background:transparent; border:0; cursor:pointer; padding:10%;
+  font:inherit; background:transparent; border:0; cursor:pointer; padding:0; position:relative; min-width:0; min-height:0;
   border-right:4px solid var(--ink); border-bottom:4px solid var(--ink);
   display:flex; align-items:center; justify-content:center; border-radius:0;
 }
 .cell:nth-child(3n){border-right:0}
 .cell:nth-child(n+7){border-bottom:0}
 .cell.win{background:var(--win)}
-.cell svg{width:100%; height:100%; overflow:visible}
+.cell svg{position:absolute; inset:10%; width:80%; height:80%; overflow:visible}
 .mark{fill:none; stroke-width:9; stroke-linecap:round; stroke-dasharray:1}
 .x{stroke:var(--ink)} .o{stroke:var(--pen)}
 .draw{animation:draw .28s ease-out both}
