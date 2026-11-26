@@ -134,7 +134,7 @@ p{margin:0}
   <div class="help">
     <p>Take turns placing your mark. X goes first.</p>
     <p>Get three in a row across, down or diagonally to win the round.</p>
-    <p>If all nine squares fill up with no line, it’s a draw.</p>
+    <p>If all nine squares fill up with no line, it&#8217;s a draw.</p>
     <p>Against the computer you play X. It never misses a trick, so a draw is a good result.</p>
   </div>
   <button type="button" class="btn main" id="bHelpBack">Back</button>
@@ -154,6 +154,7 @@ p{margin:0}
   <div class="card">
     <h2 id="mTitle"></h2>
     <button type="button" class="btn main" id="bPlay">Play again</button>
+    <button type="button" class="btn" id="bBack">Back to menu</button>
   </div>
 </div>
 
@@ -237,7 +238,7 @@ p{margin:0}
 
   function msg(){
     if(over)return;
-    setStatus(mode==="cpu"&&turn==="O"?"Computer is thinking…":turn+"’s turn");
+    setStatus(mode==="cpu"&&turn==="O"?"Computer is thinking\u2026":turn+"\u2019s turn");
   }
   function setStatus(t){statusEl.textContent=t}
 
@@ -250,7 +251,7 @@ p{margin:0}
     });
     $("sx").textContent=score.X;$("so").textContent=score.O;$("sd").textContent=score.D;
     if(over){
-      setStatus(w?w.p+" wins this round":"It’s a draw");
+      setStatus(w?w.p+" wins this round":"It\u2019s a draw");
     }else msg();
   }
 
@@ -268,7 +269,7 @@ p{margin:0}
   }
   function showModal(){
     var w=winner(board);
-    $("mTitle").textContent=w?w.p+" wins!":"It’s a draw";
+    $("mTitle").textContent=w?w.p+" wins!":"It\u2019s a draw";
     $("modal").hidden=false;
     $("bPlay").focus();
   }
@@ -276,7 +277,7 @@ p{margin:0}
     var w=winner(board);
     cells.forEach(function(c,i){c.classList.toggle("win",!!(w&&w.line.indexOf(i)>-1))});
     $("sx").textContent=score.X;$("so").textContent=score.O;$("sd").textContent=score.D;
-    if(over)setStatus(w?w.p+" wins this round":"It’s a draw");else msg();
+    if(over)setStatus(w?w.p+" wins this round":"It\u2019s a draw");else msg();
   }
 
   function maybeCpu(){
@@ -327,6 +328,9 @@ p{margin:0}
   $("bAgain").addEventListener("click",function(){show("menu")});
   $("bPlay").addEventListener("click",function(){
     $("modal").hidden=true;resetBoard();renderBoard();save();
+  });
+  $("bBack").addEventListener("click",function(){
+    $("modal").hidden=true;save();show("menu");
   });
 
   if(!load())resetBoard();
