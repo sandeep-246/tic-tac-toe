@@ -309,7 +309,7 @@ p{margin:0}
   $("splash").addEventListener("click",goMenu);
   $("splash").addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" ")goMenu()});
   $("splash").tabIndex=0;
-  var splashTimer=setTimeout(goMenu,2600);
+  var splashTimer=null;
   function goMenu(){clearTimeout(splashTimer);if(!$("splash").hidden)show("menu")}
 
   document.querySelectorAll(".seg button").forEach(function(btn){
