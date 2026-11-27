@@ -47,7 +47,8 @@ h2{margin:0; font-size:2.4rem; line-height:1}
 p{margin:0}
 
 /* splash */
-#splash{cursor:pointer; gap:14px}
+#splash{cursor:pointer; gap:14px; position:relative}
+.copy{position:absolute; left:0; right:0; bottom:16px; text-align:center; font-size:.9rem; color:var(--soft)}
 .icon{width:150px; height:150px; border-radius:32px; background:var(--paper); border:4px solid var(--ink); padding:14px}
 .icon svg{width:100%; height:100%; overflow:visible}
 .ig{stroke:var(--ink); stroke-width:6; stroke-linecap:round; fill:none}
@@ -113,6 +114,7 @@ p{margin:0}
   </div>
   <h1>Tic-tac-toe</h1>
   <p class="hint">Tap to start</p>
+  <p class="copy">&#169; 2026 Sandeep. All rights reserved.</p>
 </section>
 
 <section id="menu" class="screen center" hidden>
